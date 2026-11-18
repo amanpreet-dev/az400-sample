@@ -4,7 +4,7 @@ pool:
 steps:
   - task: AzureCLI@2
     inputs:
-      azureSubscription: sc-az400-credit
+      azureSubscription: sc-az400-typo
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
