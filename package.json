@@ -1,0 +1,12 @@
+{
+  "name": "az400-sample",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test",
+    "test:ci": "node --test --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results.xml --test-reporter=lcov --test-reporter-destination=lcov.info"
+  },
+  "engines": { "node": ">=22" }
+}
