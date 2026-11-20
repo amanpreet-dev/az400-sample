@@ -1,0 +1,13 @@
+name: node-test
+description: Set up Node and run tests with JUnit output
+inputs:
+  node-version:
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+    - run: npm run test:ci
+      shell: bash

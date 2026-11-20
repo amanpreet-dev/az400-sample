@@ -1,0 +1,57 @@
+name: ci
+on:
+  push:
+    branches: [ main ]
+    paths-ignore: [ 'docs/**', '**.md' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      slow:
+        description: Run slow tests
+        type: boolean
+        default: false
+
+permissions:
+  contents: read            # least privilege for GITHUB_TOKEN
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true  # a new push cancels the older run on the same ref
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ '22', '24' ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/node-test          # composite action (Part B)
+        with:
+          node-version: ${{ matrix.node }}
+      - if: ${{ inputs.slow }}
+        run: echo "slow tests" && sleep 20
+
+  package:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p out && cp -r src package.json out/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-${{ github.run_number }}
+          path: out/
+          retention-days: 7
+
+  deploy-dev:
+    needs: package
+    if: github.ref == 'refs/heads/main'
+    permissions:              # a called workflow can't get MORE permissions than its caller grants
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      environment: dev
