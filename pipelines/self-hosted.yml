@@ -1,0 +1,11 @@
+trigger: none
+pool:
+  name: pool-mac
+  demands:
+    - agent.os -equals Darwin
+    - labtool -equals yes
+steps:
+  - script: |
+      echo "Running on $(Agent.Name) in $(Agent.HomeDirectory)"
+      node --version
+      ls ~/az400-agent/_work      # the work folder persists between runs (warm caches)
