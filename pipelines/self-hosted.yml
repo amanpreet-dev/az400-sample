@@ -2,7 +2,7 @@ trigger: none
 pool:
   name: pool-mac
   demands:
-    - agent.os -equals Darwin
+    - agent.os -equals Linux
     - labtool -equals yes
 steps:
   - script: |
