@@ -1,0 +1,14 @@
+trigger: none
+resources:
+  pipelines:
+    - pipeline: ci # alias
+      source: az400-ci # the pipeline's name
+      trigger:
+        branches:
+          include: [main]
+pool:
+  vmImage: ubuntu-latest
+steps:
+  - download: ci
+    artifact: app
+  - script: echo "Triggered by $(resources.pipeline.ci.runName)" && ls $(Pipeline.Workspace)/ci/app

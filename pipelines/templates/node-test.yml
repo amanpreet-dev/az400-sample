@@ -1,0 +1,17 @@
+parameters:
+  - name: nodeVersion
+    type: string
+    default: "22.x"
+
+steps:
+  - task: UseNode@1
+    inputs:
+      version: ${{ parameters.nodeVersion }}
+  - script: npm run test:ci
+    displayName: Unit tests (node ${{ parameters.nodeVersion }})
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: test-results.xml
+      testRunTitle: Node ${{ parameters.nodeVersion }}
